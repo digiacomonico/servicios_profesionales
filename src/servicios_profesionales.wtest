@@ -1,0 +1,113 @@
+import Profesional.*
+import Universidad.*
+import EmpresaServicio.*
+
+test "Profesional estudio en la UBA" {
+	
+	var profesionalA = new Profesional()
+	profesionalA.casaEstudios("UBA")
+	profesionalA.tipoProfesional("Vinculado")
+	assert.equals("UBA",profesionalA.casaEstudios())
+
+}
+
+test "Universidad UBA, profesional Vinculado, provincia habilitada, Buenos Aires" {
+	
+	var universidadUBA = new Universidad()
+	var profesionalA = new Profesional()
+	profesionalA.tipoProfesional("Vinculado")
+	universidadUBA.ubicacionProvincia("Buenos Aires")
+	assert.equals(#{"Buenos Aires"},universidadUBA.provinciasHabilitadas(profesionalA))
+
+}
+
+test "Universidad Litoral, profesional Litoral, provincias habilitadas, Corrientes, Entre Rios, Santa Fe" {
+	
+	var universidadLitoral = new Universidad()
+	var profesionalA = new Profesional()
+	profesionalA.tipoProfesional("Litoral")
+	universidadLitoral.ubicacionProvincia("Corrientes")
+	assert.equals(#{"Corrientes", "Entre Ríos", "Santa Fe"},universidadLitoral.provinciasHabilitadas(profesionalA))
+
+}
+
+test "Universidad X, profesional Libre, provincias habilitadas, Santa Cruz y Tierra del Fuego" {
+	
+	var universidadX = new Universidad()
+	var profesionalA = new Profesional()
+	profesionalA.tipoProfesional("Libre")
+	profesionalA.provHab(#{"Santa Cruz", "Tierra del Fuego"})
+	universidadX.ubicacionProvincia("Corrientes")
+	assert.equals(#{"Santa Cruz", "Tierra del Fuego"},profesionalA.provinciasHabilitadas())
+
+}
+
+
+test "Universidad UBA, profesional Vinculado, honorarios de la UBA 2000" {
+	
+	var universidadUBA = new Universidad()
+	var profesionalA = new Profesional()
+	profesionalA.tipoProfesional("Vinculado")
+	universidadUBA.honorariosRecomendados(2000)
+	assert.equals(2000,universidadUBA.honorarios(profesionalA))
+
+}
+
+test "Universidad Litoral, profesional Vinculado, honorarios de la UBA 2000" {
+	
+	var universidadLitoral = new Universidad()
+	var profesionalA = new Profesional()
+	profesionalA.tipoProfesional("Litoral")
+	assert.equals(3000,universidadLitoral.honorarios(profesionalA))
+
+}
+
+test "Universidad X, profesional Libre, honorarios 1000" {
+	
+	var profesionalA = new Profesional()
+	profesionalA.tipoProfesional("Litoral")
+	profesionalA.honorarios(1000)
+	assert.equals(1000,profesionalA.honorarios())
+
+}
+
+test "Profesional A, B y C son caros" {
+
+var profesionalA = new Profesional()
+var profesionalB = new Profesional()
+var profesionalC = new Profesional()
+var profesionalD = new Profesional()
+var universidadUBA = new Universidad()
+var universidadLitoral = new Universidad()
+var universidadRosario = new Universidad()
+var empresaServicioA = new EmpresaServicio()
+
+profesionalA.tipoProfesional("Vinculado")
+universidadUBA.honorariosRecomendados(3500)
+universidadUBA.agregarProfesional(profesionalA)
+profesionalA.honorarios(universidadUBA,profesionalA)
+
+profesionalB.tipoProfesional("Litoral")
+profesionalB.honorarios(universidadLitoral,profesionalB)
+universidadLitoral.agregarProfesional(profesionalB)
+
+
+profesionalC.tipoProfesional("Vinculado")
+universidadRosario.honorariosRecomendados(2000)
+profesionalC.honorarios(universidadRosario,profesionalC)
+universidadRosario.agregarProfesional(profesionalC)
+
+
+profesionalD.tipoProfesional("Libre")
+profesionalD.honorarios(1000)
+
+empresaServicioA.honorarioReferencia(1500)
+
+empresaServicioA.agregarProfesionales(#{profesionalA,profesionalB,profesionalC,profesionalD})
+empresaServicioA.agregarUniversidad(universidadUBA)
+empresaServicioA.agregarUniversidad(universidadLitoral)
+empresaServicioA.agregarUniversidad(universidadRosario)
+
+assert.equals(#{profesionalA, profesionalB,profesionalC},empresaServicioA.profesionalesCaros())
+
+}
