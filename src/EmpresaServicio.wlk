@@ -37,6 +37,10 @@ class EmpresaServicio{
 		//.union(honorariosUniversidades)
 	}
 	
+	method profesionalMasBarato() {
+		return profesionales.sortedBy({ profA , profB => profA.honorarios() < profB.honorarios() }).first()
+	} 
+	
 	method universidadesFormadoras(){
 		return profesionales.filter({profesional => profesional.casaEstudios() == universidades.filter({uni => uni.nombre()})})
 		
