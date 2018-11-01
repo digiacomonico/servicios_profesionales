@@ -34,7 +34,12 @@ class EmpresaServicio{
 	method profesionalesCaros(){
 		return profesionales.filter({profesional => profesional.honorarios() > self.honorarioReferencia() })
 		//var honorariosUniversidades = universidades.filter({uni => uni.honorarios(profesional) > self.honorarioReferencia()})
-		
 		//.union(honorariosUniversidades)
+	}
+	
+	method universidadesFormadoras(){
+		return profesionales.filter({profesional => profesional.casaEstudios() == universidades.filter({uni => uni.nombre()})})
+		
+		
 	}
 }

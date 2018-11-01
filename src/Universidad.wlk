@@ -45,5 +45,11 @@ class Universidad {
 		else return profesional.honorarios()
 	}
 
+//El conjunto de las universidades formadoras, es decir las universidades donde estudiaron sus
+//profesionales contratados, sin repetidos.
+
+	method formadoras(){
+		return profesionales.filter({profesional => profesional.casaEstudios() == self.nombre() }).asSet()
+	}
 
 }

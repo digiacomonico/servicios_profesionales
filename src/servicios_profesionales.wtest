@@ -53,7 +53,7 @@ test "Universidad UBA, profesional Vinculado, honorarios de la UBA 2000" {
 
 }
 
-test "Universidad Litoral, profesional Vinculado, honorarios de la UBA 2000" {
+test "Universidad Litoral, profesional Vinculado" {
 	
 	var universidadLitoral = new Universidad()
 	var profesionalA = new Profesional()
@@ -110,4 +110,18 @@ empresaServicioA.agregarUniversidad(universidadRosario)
 
 assert.equals(#{profesionalA, profesionalB,profesionalC},empresaServicioA.profesionalesCaros())
 
+}
+
+
+test "a"{
+	var universidadUBA = new Universidad()
+	var profesionalA = new Profesional()
+	var empresaServicioA = new EmpresaServicio()
+	profesionalA.tipoProfesional("Vinculado")
+	profesionalA.casaEstudios("Universidad de Buenos Aires")
+	universidadUBA.nombre("Universidad de Buenos Aires")
+	universidadUBA.ubicacionProvincia("Buenos Aires")
+	empresaServicioA.agregarProfesional(profesionalA)
+	empresaServicioA.agregarUniversidad(universidadUBA)
+	assert.equals(#{"Universidad de Buenos Aires"},empresaServicioA.universidadesFormadoras())
 }
