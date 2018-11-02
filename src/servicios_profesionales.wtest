@@ -112,9 +112,6 @@ assert.equals(#{profesionalA, profesionalB,profesionalC},empresaServicioA.profes
 
 }
 
-
-
-
 test "UBA es una universidad Formadora"{
 	
 	var profesionalA = new Profesional()
@@ -168,6 +165,12 @@ assert.equals(profesionalD,empresaServicioA.profesionalMasBarato())
 }
 
 
-test "A"{
-	assert.equals(0,0)
+test "Provincia Cubierta: Mendoza"{
+	var profesionalA = new Profesional()
+	var empresaServicioA = new EmpresaServicio()
+	profesionalA.tipoProfesional("Libre")
+	profesionalA.provHab(#{"Mendoza"})
+	empresaServicioA.agregarProfesional(profesionalA)
+	assert.equals(true,empresaServicioA.provinciaCubierta(#{"Mendoza"}))
 }
+

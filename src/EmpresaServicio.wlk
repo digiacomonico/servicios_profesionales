@@ -47,6 +47,6 @@ class EmpresaServicio{
 	
 	method provinciaCubierta(provincia){
 		var provHab =  profesionales.map({profesional => profesional.provinciasHabilitadas()})
-		return provHab.any(provincia)
+		return provHab.contains(provincia)
 	}
 	}
