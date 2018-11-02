@@ -115,16 +115,13 @@ assert.equals(#{profesionalA, profesionalB,profesionalC},empresaServicioA.profes
 
 
 
-test "a"{
-	var universidadUBA = new Universidad()
+test "UBA es una universidad Formadora"{
+	
 	var profesionalA = new Profesional()
 	var empresaServicioA = new EmpresaServicio()
 	profesionalA.tipoProfesional("Vinculado")
 	profesionalA.casaEstudios("Universidad de Buenos Aires")
-	universidadUBA.nombre("Universidad de Buenos Aires")
-	universidadUBA.ubicacionProvincia("Buenos Aires")
 	empresaServicioA.agregarProfesional(profesionalA)
-	empresaServicioA.agregarUniversidad(universidadUBA)
 	assert.equals(#{"Universidad de Buenos Aires"},empresaServicioA.universidadesFormadoras())
 }
 
@@ -170,3 +167,7 @@ assert.equals(profesionalD,empresaServicioA.profesionalMasBarato())
 
 }
 
+
+test "A"{
+	assert.equals(0,0)
+}

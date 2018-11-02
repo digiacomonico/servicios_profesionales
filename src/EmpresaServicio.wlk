@@ -42,8 +42,11 @@ class EmpresaServicio{
 	} 
 	
 	method universidadesFormadoras(){
-		return profesionales.filter({profesional => profesional.casaEstudios() == universidades.filter({uni => uni.nombre()})})
-		
-		
+		return profesionales.map({profesional => profesional.casaEstudios()}).asSet()
 	}
-}
+	
+	method provinciaCubierta(provincia){
+		var provHab =  profesionales.map({profesional => profesional.provinciasHabilitadas()})
+		return provHab.any(provincia)
+	}
+	}
