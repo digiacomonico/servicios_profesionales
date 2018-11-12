@@ -28,6 +28,7 @@ class Universidad {
 			provinciasHabilitadasProfesional.add("Entre Rios")
 			provinciasHabilitadasProfesional.add("Santa Fe")
 			provinciasHabilitadasProfesional.add("Corrientes")
+			profesional.provHab(#{"Entre Rios","Santa Fe","Corrientes"})
 			return provinciasHabilitadasProfesional
 		}
 		

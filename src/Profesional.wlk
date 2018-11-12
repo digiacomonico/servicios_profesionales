@@ -13,7 +13,13 @@ class Profesional {
 		provinciasHabilitadas.addAll(provincias)
 		return provinciasHabilitadas
 	}
+	else if (self.tipoProfesional() == "Litoral"){
+		provinciasHabilitadas.addAll(#{"Corrientes", "Entre Rios", "Santa Fe"})
+		return provinciasHabilitadas
+	}
+	
 	else return provinciasHabilitadas
+	
 	}
 	
 	method provinciasHabilitadas(){

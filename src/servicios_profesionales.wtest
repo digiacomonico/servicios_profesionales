@@ -27,7 +27,7 @@ test "Universidad Litoral, profesional Litoral, provincias habilitadas, Corrient
 	var profesionalA = new Profesional()
 	profesionalA.tipoProfesional("Litoral")
 	universidadLitoral.ubicacionProvincia("Corrientes")
-	assert.equals(#{"Corrientes", "Entre Ríos", "Santa Fe"},universidadLitoral.provinciasHabilitadas(profesionalA))
+	assert.equals(#{"Corrientes", "Entre Rios", "Santa Fe"},universidadLitoral.provinciasHabilitadas(profesionalA))
 
 }
 
@@ -182,7 +182,7 @@ test "Provincia Cubierta: Del Litoral"{
 	universidadLitoral.provinciasHabilitadas(profesionalA)
 	empresaServicioA.agregarProfesional(profesionalA)
 	empresaServicioA.agregarUniversidad(universidadLitoral)
-	assert.equals(true,empresaServicioA.provinciaCubiertaA(#{"Corrientes","Santa Fe", "Entre Rios"}))
+	assert.equals(true,empresaServicioA.provinciaCubiertaA(#{"Corrientes", "Entre Rios", "Santa Fe"}))
 }
 
 test "Estudio 1 en la UBA"{
