@@ -1,4 +1,5 @@
 import Profesional.*
+import asociacionProfesionales.*
 
 class Universidad {
 	var property nombre
@@ -8,6 +9,16 @@ class Universidad {
 	var profesionales = []
 	var provinciasHabilitadasProfesional = #{}
 	var property honorarios
+	
+	var donacionesRecibidas = 0
+	
+	method donacionesRecibidas(){
+		return donacionesRecibidas
+	}
+	
+	method donacionesRecibidas(valor){
+		donacionesRecibidas += valor 
+	}
 	
 	method agregarProfesional(profesional){
 		profesionales.add(profesional)

@@ -1,6 +1,7 @@
 import Profesional.*
 import Universidad.*
 import EmpresaServicio.*
+import asociacionProfesionales.*
 
 test "Profesional estudio en la UBA" {
 	
@@ -580,4 +581,43 @@ test "Ningun profesional estudio en San Martin"{
 	empresaServicio.agregarUniversidad(uniHurlingham)
 	empresaServicio.honorarioReferencia(3500)
 	assert.equals(0,empresaServicio.cantidadProfEstudioEn("Universidad de San Martin"))
+}
+
+test "donacion vinculado: le quedan $0 y a la universidad la mitad de sus honorarios"{
+	var universidadUBA = new Universidad()
+	var profesionalA = new Profesional()
+	profesionalA.tipoProfesional("Vinculado")
+	universidadUBA.honorariosRecomendados(2000)
+	profesionalA.honorarios(universidadUBA,profesionalA)
+	profesionalA.donarUniversidad(universidadUBA)
+	assert.equals(1000,universidadUBA.donacionesRecibidas())
+	assert.equals(0,profesionalA.honorarios())
+
+}
+
+test "donacion litoral"{
+	var universidadLitoral = new Universidad()
+	var profesionalA = new Profesional()
+	profesionalA.tipoProfesional("Litoral")
+	universidadLitoral.honorarios(profesionalA)
+	profesionalA.honorarios(universidadLitoral,profesionalA)
+	profesionalA.donarAsociacion(asociacionProfesionales)
+	assert.equals(3000,asociacionProfesionales.donacionesRecibidas())
+	assert.equals(0,profesionalA.honorarios())
+}
+
+test "profesional libre le pasa a otro profesional libre"{
+	var profesionalA = new Profesional()
+	profesionalA.tipoProfesional("Libre")
+	profesionalA.honorarios(5000)
+	
+	var profesionalB = new Profesional()
+	profesionalB.tipoProfesional("Libre")
+	profesionalB.honorarios(0)
+	
+	profesionalA.donarLibre(profesionalB,3000)
+	
+	assert.equals(2000,profesionalA.totalRecaudado())
+	assert.equals(3000,profesionalB.totalRecaudado())
+	
 }
