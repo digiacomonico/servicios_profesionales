@@ -174,3 +174,410 @@ test "Provincia Cubierta: Mendoza"{
 	assert.equals(true,empresaServicioA.provinciaCubierta(#{"Mendoza"}))
 }
 
+test "Provincia Cubierta: Del Litoral"{
+	var profesionalA = new Profesional()
+	var universidadLitoral = new Universidad()
+	var empresaServicioA = new EmpresaServicio()
+	profesionalA.tipoProfesional("Litoral")
+	universidadLitoral.provinciasHabilitadas(profesionalA)
+	empresaServicioA.agregarProfesional(profesionalA)
+	empresaServicioA.agregarUniversidad(universidadLitoral)
+	assert.equals(true,empresaServicioA.provinciaCubiertaA(#{"Corrientes","Santa Fe", "Entre Rios"}))
+}
+
+test "Estudio 1 en la UBA"{
+	
+	var profesionalA = new Profesional()
+	var empresaServicioA = new EmpresaServicio()
+	profesionalA.tipoProfesional("Vinculado")
+	profesionalA.casaEstudios("Universidad de Buenos Aires")
+	empresaServicioA.agregarProfesional(profesionalA)
+	assert.equals(1,empresaServicioA.cantidadProfEstudioEn("Universidad de Buenos Aires"))
+}
+
+test "Profesional Caro: Lito"{
+	var uniSanMartin = new Universidad()
+	uniSanMartin.nombre("Universidad de San Martin")
+	uniSanMartin.honorariosRecomendados(3500)
+	uniSanMartin.ubicacionProvincia("Buenos Aires")
+	
+	var uniRosario = new Universidad()
+	uniRosario.nombre("Universidad de Rosario")
+	uniRosario.honorariosRecomendados(2800)
+	uniRosario.ubicacionProvincia("Santa Fe")
+	
+	var uniCorrientes = new Universidad()
+	uniCorrientes.nombre("Universidad de Corrientes")
+	uniCorrientes.honorariosRecomendados(4200)
+	uniCorrientes.ubicacionProvincia("Corrientes")
+	
+	var uniHurlingham = new Universidad()
+	uniHurlingham.nombre("Universidad de Hurlingham")
+	uniHurlingham.honorariosRecomendados(8800)
+	uniHurlingham.ubicacionProvincia("Buenos Aires")
+	
+	
+	var pManolo = new Profesional()
+	pManolo.tipoProfesional("Vinculado")
+	pManolo.casaEstudios("Universidad de Rosario")
+	
+	
+	var pMelina = new Profesional()
+	pMelina.tipoProfesional("Litoral")
+	pMelina.casaEstudios("Universidad de Corrientes")
+	pMelina.honorarios()
+	
+	var pLito = new Profesional()
+	pLito.tipoProfesional("Libre")
+	pLito.casaEstudios("Universidad de Hurlingham")
+	pLito.honorarios(5000)
+	pLito.provHab(#{"Santa Fe"})
+	pLito.provHab(#{"Cordoba"})
+	pLito.provHab(#{"Buenos Aires"})
+	
+	var pLuciana = new Profesional()
+	pLuciana.tipoProfesional("Libre")
+	pLuciana.casaEstudios("Universidad de Rosario")
+	pLuciana.honorarios(3200)
+	pLito.provHab(#{"Santa Fe"})
+	pLito.provHab(#{"Entre Rios"})
+	
+	
+	uniRosario.agregarProfesional(pManolo)
+	pManolo.honorarios(uniRosario,pManolo)
+	
+	uniCorrientes.agregarProfesional(pMelina)
+	pMelina.honorarios(uniCorrientes,pMelina)
+	
+	var empresaServicio = new EmpresaServicio()
+	empresaServicio.agregarProfesionales(#{pManolo,pMelina,pLito,pLuciana})
+	empresaServicio.agregarUniversidad(uniSanMartin)
+	empresaServicio.agregarUniversidad(uniRosario)
+	empresaServicio.agregarUniversidad(uniCorrientes)
+	empresaServicio.agregarUniversidad(uniHurlingham)
+	empresaServicio.honorarioReferencia(3500)
+	
+	assert.equals(#{pLito},empresaServicio.profesionalesCaros())
+}
+
+test "Universidades formadoras: Rosario, Corrientes, Hurlingham"{
+	var uniSanMartin = new Universidad()
+	uniSanMartin.nombre("Universidad de San Martin")
+	uniSanMartin.honorariosRecomendados(3500)
+	uniSanMartin.ubicacionProvincia("Buenos Aires")
+	
+	var uniRosario = new Universidad()
+	uniRosario.nombre("Universidad de Rosario")
+	uniRosario.honorariosRecomendados(2800)
+	uniRosario.ubicacionProvincia("Santa Fe")
+	
+	var uniCorrientes = new Universidad()
+	uniCorrientes.nombre("Universidad de Corrientes")
+	uniCorrientes.honorariosRecomendados(4200)
+	uniCorrientes.ubicacionProvincia("Corrientes")
+	
+	var uniHurlingham = new Universidad()
+	uniHurlingham.nombre("Universidad de Hurlingham")
+	uniHurlingham.honorariosRecomendados(8800)
+	uniHurlingham.ubicacionProvincia("Buenos Aires")
+	
+	
+	var pManolo = new Profesional()
+	pManolo.tipoProfesional("Vinculado")
+	pManolo.casaEstudios("Universidad de Rosario")
+	
+	
+	var pMelina = new Profesional()
+	pMelina.tipoProfesional("Litoral")
+	pMelina.casaEstudios("Universidad de Corrientes")
+	pMelina.honorarios()
+	
+	var pLito = new Profesional()
+	pLito.tipoProfesional("Libre")
+	pLito.casaEstudios("Universidad de Hurlingham")
+	pLito.honorarios(5000)
+	pLito.provHab(#{"Santa Fe"})
+	pLito.provHab(#{"Cordoba"})
+	pLito.provHab(#{"Buenos Aires"})
+	
+	var pLuciana = new Profesional()
+	pLuciana.tipoProfesional("Libre")
+	pLuciana.casaEstudios("Universidad de Rosario")
+	pLuciana.honorarios(3200)
+	pLito.provHab(#{"Santa Fe"})
+	pLito.provHab(#{"Entre Rios"})
+	
+	
+	uniRosario.agregarProfesional(pManolo)
+	pManolo.honorarios(uniRosario,pManolo)
+	
+	uniCorrientes.agregarProfesional(pMelina)
+	pMelina.honorarios(uniCorrientes,pMelina)
+	
+	var empresaServicio = new EmpresaServicio()
+	empresaServicio.agregarProfesionales(#{pManolo,pMelina,pLito,pLuciana})
+	empresaServicio.agregarUniversidad(uniSanMartin)
+	empresaServicio.agregarUniversidad(uniRosario)
+	empresaServicio.agregarUniversidad(uniCorrientes)
+	empresaServicio.agregarUniversidad(uniHurlingham)
+	empresaServicio.honorarioReferencia(3500)
+	assert.equals(#{"Universidad de Rosario", "Universidad de Corrientes", "Universidad de Hurlingham"},empresaServicio.universidadesFormadoras())
+}
+
+
+
+test "Profesional mas barato: Manolo"{
+	var uniSanMartin = new Universidad()
+	uniSanMartin.nombre("Universidad de San Martin")
+	uniSanMartin.honorariosRecomendados(3500)
+	uniSanMartin.ubicacionProvincia("Buenos Aires")
+	
+	var uniRosario = new Universidad()
+	uniRosario.nombre("Universidad de Rosario")
+	uniRosario.honorariosRecomendados(2800)
+	uniRosario.ubicacionProvincia("Santa Fe")
+	
+	var uniCorrientes = new Universidad()
+	uniCorrientes.nombre("Universidad de Corrientes")
+	uniCorrientes.honorariosRecomendados(4200)
+	uniCorrientes.ubicacionProvincia("Corrientes")
+	
+	var uniHurlingham = new Universidad()
+	uniHurlingham.nombre("Universidad de Hurlingham")
+	uniHurlingham.honorariosRecomendados(8800)
+	uniHurlingham.ubicacionProvincia("Buenos Aires")
+	
+	
+	var pManolo = new Profesional()
+	pManolo.tipoProfesional("Vinculado")
+	pManolo.casaEstudios("Universidad de Rosario")
+	
+	
+	var pMelina = new Profesional()
+	pMelina.tipoProfesional("Litoral")
+	pMelina.casaEstudios("Universidad de Corrientes")
+	pMelina.honorarios()
+	
+	var pLito = new Profesional()
+	pLito.tipoProfesional("Libre")
+	pLito.casaEstudios("Universidad de Hurlingham")
+	pLito.honorarios(5000)
+	pLito.provHab(#{"Santa Fe"})
+	pLito.provHab(#{"Cordoba"})
+	pLito.provHab(#{"Buenos Aires"})
+	
+	var pLuciana = new Profesional()
+	pLuciana.tipoProfesional("Libre")
+	pLuciana.casaEstudios("Universidad de Rosario")
+	pLuciana.honorarios(3200)
+	pLito.provHab(#{"Santa Fe"})
+	pLito.provHab(#{"Entre Rios"})
+	
+	
+	uniRosario.agregarProfesional(pManolo)
+	pManolo.honorarios(uniRosario,pManolo)
+	
+	uniCorrientes.agregarProfesional(pMelina)
+	pMelina.honorarios(uniCorrientes,pMelina)
+	
+	var empresaServicio = new EmpresaServicio()
+	empresaServicio.agregarProfesionales(#{pManolo,pMelina,pLito,pLuciana})
+	empresaServicio.agregarUniversidad(uniSanMartin)
+	empresaServicio.agregarUniversidad(uniRosario)
+	empresaServicio.agregarUniversidad(uniCorrientes)
+	empresaServicio.agregarUniversidad(uniHurlingham)
+	empresaServicio.honorarioReferencia(3500)
+	assert.equals(pManolo,empresaServicio.profesionalMasBarato())
+}
+
+test "2 profesionales estudiaron en Rosario"{
+	var uniSanMartin = new Universidad()
+	uniSanMartin.nombre("Universidad de San Martin")
+	uniSanMartin.honorariosRecomendados(3500)
+	uniSanMartin.ubicacionProvincia("Buenos Aires")
+	
+	var uniRosario = new Universidad()
+	uniRosario.nombre("Universidad de Rosario")
+	uniRosario.honorariosRecomendados(2800)
+	uniRosario.ubicacionProvincia("Santa Fe")
+	
+	var uniCorrientes = new Universidad()
+	uniCorrientes.nombre("Universidad de Corrientes")
+	uniCorrientes.honorariosRecomendados(4200)
+	uniCorrientes.ubicacionProvincia("Corrientes")
+	
+	var uniHurlingham = new Universidad()
+	uniHurlingham.nombre("Universidad de Hurlingham")
+	uniHurlingham.honorariosRecomendados(8800)
+	uniHurlingham.ubicacionProvincia("Buenos Aires")
+	
+	
+	var pManolo = new Profesional()
+	pManolo.tipoProfesional("Vinculado")
+	pManolo.casaEstudios("Universidad de Rosario")
+	
+	
+	var pMelina = new Profesional()
+	pMelina.tipoProfesional("Litoral")
+	pMelina.casaEstudios("Universidad de Corrientes")
+	pMelina.honorarios()
+	
+	var pLito = new Profesional()
+	pLito.tipoProfesional("Libre")
+	pLito.casaEstudios("Universidad de Hurlingham")
+	pLito.honorarios(5000)
+	pLito.provHab(#{"Santa Fe"})
+	pLito.provHab(#{"Cordoba"})
+	pLito.provHab(#{"Buenos Aires"})
+	
+	var pLuciana = new Profesional()
+	pLuciana.tipoProfesional("Libre")
+	pLuciana.casaEstudios("Universidad de Rosario")
+	pLuciana.honorarios(3200)
+	pLito.provHab(#{"Santa Fe"})
+	pLito.provHab(#{"Entre Rios"})
+	
+	
+	uniRosario.agregarProfesional(pManolo)
+	pManolo.honorarios(uniRosario,pManolo)
+	
+	uniCorrientes.agregarProfesional(pMelina)
+	pMelina.honorarios(uniCorrientes,pMelina)
+	
+	var empresaServicio = new EmpresaServicio()
+	empresaServicio.agregarProfesionales(#{pManolo,pMelina,pLito,pLuciana})
+	empresaServicio.agregarUniversidad(uniSanMartin)
+	empresaServicio.agregarUniversidad(uniRosario)
+	empresaServicio.agregarUniversidad(uniCorrientes)
+	empresaServicio.agregarUniversidad(uniHurlingham)
+	empresaServicio.honorarioReferencia(3500)
+	assert.equals(2,empresaServicio.cantidadProfEstudioEn("Universidad de Rosario"))
+}
+
+test "1 profesional estudio en Hurlingham"{
+	var uniSanMartin = new Universidad()
+	uniSanMartin.nombre("Universidad de San Martin")
+	uniSanMartin.honorariosRecomendados(3500)
+	uniSanMartin.ubicacionProvincia("Buenos Aires")
+	
+	var uniRosario = new Universidad()
+	uniRosario.nombre("Universidad de Rosario")
+	uniRosario.honorariosRecomendados(2800)
+	uniRosario.ubicacionProvincia("Santa Fe")
+	
+	var uniCorrientes = new Universidad()
+	uniCorrientes.nombre("Universidad de Corrientes")
+	uniCorrientes.honorariosRecomendados(4200)
+	uniCorrientes.ubicacionProvincia("Corrientes")
+	
+	var uniHurlingham = new Universidad()
+	uniHurlingham.nombre("Universidad de Hurlingham")
+	uniHurlingham.honorariosRecomendados(8800)
+	uniHurlingham.ubicacionProvincia("Buenos Aires")
+	
+	
+	var pManolo = new Profesional()
+	pManolo.tipoProfesional("Vinculado")
+	pManolo.casaEstudios("Universidad de Rosario")
+	
+	
+	var pMelina = new Profesional()
+	pMelina.tipoProfesional("Litoral")
+	pMelina.casaEstudios("Universidad de Corrientes")
+	pMelina.honorarios()
+	
+	var pLito = new Profesional()
+	pLito.tipoProfesional("Libre")
+	pLito.casaEstudios("Universidad de Hurlingham")
+	pLito.honorarios(5000)
+	pLito.provHab(#{"Santa Fe"})
+	pLito.provHab(#{"Cordoba"})
+	pLito.provHab(#{"Buenos Aires"})
+	
+	var pLuciana = new Profesional()
+	pLuciana.tipoProfesional("Libre")
+	pLuciana.casaEstudios("Universidad de Rosario")
+	pLuciana.honorarios(3200)
+	pLito.provHab(#{"Santa Fe"})
+	pLito.provHab(#{"Entre Rios"})
+	
+	
+	uniRosario.agregarProfesional(pManolo)
+	pManolo.honorarios(uniRosario,pManolo)
+	
+	uniCorrientes.agregarProfesional(pMelina)
+	pMelina.honorarios(uniCorrientes,pMelina)
+	
+	var empresaServicio = new EmpresaServicio()
+	empresaServicio.agregarProfesionales(#{pManolo,pMelina,pLito,pLuciana})
+	empresaServicio.agregarUniversidad(uniSanMartin)
+	empresaServicio.agregarUniversidad(uniRosario)
+	empresaServicio.agregarUniversidad(uniCorrientes)
+	empresaServicio.agregarUniversidad(uniHurlingham)
+	empresaServicio.honorarioReferencia(3500)
+	assert.equals(1,empresaServicio.cantidadProfEstudioEn("Universidad de Hurlingham"))
+}
+
+test "Ningun profesional estudio en San Martin"{
+	var uniSanMartin = new Universidad()
+	uniSanMartin.nombre("Universidad de San Martin")
+	uniSanMartin.honorariosRecomendados(3500)
+	uniSanMartin.ubicacionProvincia("Buenos Aires")
+	
+	var uniRosario = new Universidad()
+	uniRosario.nombre("Universidad de Rosario")
+	uniRosario.honorariosRecomendados(2800)
+	uniRosario.ubicacionProvincia("Santa Fe")
+	
+	var uniCorrientes = new Universidad()
+	uniCorrientes.nombre("Universidad de Corrientes")
+	uniCorrientes.honorariosRecomendados(4200)
+	uniCorrientes.ubicacionProvincia("Corrientes")
+	
+	var uniHurlingham = new Universidad()
+	uniHurlingham.nombre("Universidad de Hurlingham")
+	uniHurlingham.honorariosRecomendados(8800)
+	uniHurlingham.ubicacionProvincia("Buenos Aires")
+	
+	
+	var pManolo = new Profesional()
+	pManolo.tipoProfesional("Vinculado")
+	pManolo.casaEstudios("Universidad de Rosario")
+	
+	
+	var pMelina = new Profesional()
+	pMelina.tipoProfesional("Litoral")
+	pMelina.casaEstudios("Universidad de Corrientes")
+	pMelina.honorarios()
+	
+	var pLito = new Profesional()
+	pLito.tipoProfesional("Libre")
+	pLito.casaEstudios("Universidad de Hurlingham")
+	pLito.honorarios(5000)
+	pLito.provHab(#{"Santa Fe"})
+	pLito.provHab(#{"Cordoba"})
+	pLito.provHab(#{"Buenos Aires"})
+	
+	var pLuciana = new Profesional()
+	pLuciana.tipoProfesional("Libre")
+	pLuciana.casaEstudios("Universidad de Rosario")
+	pLuciana.honorarios(3200)
+	pLito.provHab(#{"Santa Fe"})
+	pLito.provHab(#{"Entre Rios"})
+	
+	
+	uniRosario.agregarProfesional(pManolo)
+	pManolo.honorarios(uniRosario,pManolo)
+	
+	uniCorrientes.agregarProfesional(pMelina)
+	pMelina.honorarios(uniCorrientes,pMelina)
+	
+	var empresaServicio = new EmpresaServicio()
+	empresaServicio.agregarProfesionales(#{pManolo,pMelina,pLito,pLuciana})
+	empresaServicio.agregarUniversidad(uniSanMartin)
+	empresaServicio.agregarUniversidad(uniRosario)
+	empresaServicio.agregarUniversidad(uniCorrientes)
+	empresaServicio.agregarUniversidad(uniHurlingham)
+	empresaServicio.honorarioReferencia(3500)
+	assert.equals(0,empresaServicio.cantidadProfEstudioEn("Universidad de San Martin"))
+}

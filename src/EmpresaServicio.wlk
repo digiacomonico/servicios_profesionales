@@ -49,4 +49,20 @@ class EmpresaServicio{
 		var provHab =  profesionales.map({profesional => profesional.provinciasHabilitadas()})
 		return provHab.contains(provincia)
 	}
+	
+	method provinciaCubiertaA(provincia){
+		if (profesionales.map({profesional => profesional.provinciasHabilitadas()}).size() == 0){
+			var provHab =  universidades.map({universidad => universidad.provinciasHabilitadas()})
+			return provHab.contains(provincia)
+		}
+		else{
+			return profesionales.map({profesional => profesional.provinciasHabilitadas()}).contains(provincia)
+		}
+	}
+	
+	method cantidadProfEstudioEn(universidad){
+		return profesionales.filter({profesional => profesional.casaEstudios() == universidad}).size()
+	}
+	
+	
 	}

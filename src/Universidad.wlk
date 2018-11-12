@@ -4,6 +4,7 @@ class Universidad {
 	var property nombre
 	var property honorariosRecomendados
 	var property ubicacionProvincia
+	//var provinciasHabilitadas = #{}
 	var profesionales = []
 	var provinciasHabilitadasProfesional = #{}
 	var property honorarios
@@ -24,7 +25,7 @@ class Universidad {
 		}
 		
 		else if (profesional.tipoProfesional() == "Litoral"){
-			provinciasHabilitadasProfesional.add("Entre Ríos")
+			provinciasHabilitadasProfesional.add("Entre Rios")
 			provinciasHabilitadasProfesional.add("Santa Fe")
 			provinciasHabilitadasProfesional.add("Corrientes")
 			return provinciasHabilitadasProfesional
@@ -44,4 +45,13 @@ class Universidad {
 		}
 		else return profesional.honorarios()
 	}
+
+	method provinciasHabilitadas(){
+		return provinciasHabilitadasProfesional
+	}
+
+
+
 }
+
+	
