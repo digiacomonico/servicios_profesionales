@@ -1,44 +1,43 @@
 import Profesional.*
-import Universidad.*
 import EmpresaServicio.*
 import asociacionProfesionales.*
+import ProfesionalLibre.*
+import ProfesionalLitoral.*
+import ProfesionalVinculado.*
+import Universidad.*
+
 
 test "Profesional estudio en la UBA" {
 	
 	var profesionalA = new Profesional()
-	profesionalA.casaEstudios("UBA")
-	profesionalA.tipoProfesional("Vinculado")
-	assert.equals("UBA",profesionalA.casaEstudios())
+	profesionalA.casaEstudios("Universidad de Buenos Aires")
+	assert.equals("Universidad de Buenos Aires",profesionalA.casaEstudios())
 
 }
 
 test "Universidad UBA, profesional Vinculado, provincia habilitada, Buenos Aires" {
 	
 	var universidadUBA = new Universidad()
-	var profesionalA = new Profesional()
-	profesionalA.tipoProfesional("Vinculado")
+	var profesionalA = new ProfesionalVinculado()
+	universidadUBA.agregarProfesional(profesionalA)
 	universidadUBA.ubicacionProvincia("Buenos Aires")
-	assert.equals(#{"Buenos Aires"},universidadUBA.provinciasHabilitadas(profesionalA))
-
+	universidadUBA.provinciasHabilitadas()
+	assert.equals(#{"Buenos Aires"},profesionalA.provinciasHabilitadas())
 }
 
-test "Universidad Litoral, profesional Litoral, provincias habilitadas, Corrientes, Entre Rios, Santa Fe" {
-	
-	var universidadLitoral = new Universidad()
-	var profesionalA = new Profesional()
-	profesionalA.tipoProfesional("Litoral")
-	universidadLitoral.ubicacionProvincia("Corrientes")
-	assert.equals(#{"Corrientes", "Entre Rios", "Santa Fe"},universidadLitoral.provinciasHabilitadas(profesionalA))
 
+
+test "Profesional Litoral, provincias habilitadas, Corrientes, Entre Rios, Santa Fe" {
+
+	var profesionalA = new ProfesionalLitoral()
+	profesionalA.provinciasHabilitadas()
+	assert.equals(#{"Corrientes", "Entre Rios", "Santa Fe"},profesionalA.provinciasHabilitadas())
 }
 
-test "Universidad X, profesional Libre, provincias habilitadas, Santa Cruz y Tierra del Fuego" {
+test "Profesional Libre, provincias habilitadas, Santa Cruz y Tierra del Fuego" {
 	
-	var universidadX = new Universidad()
-	var profesionalA = new Profesional()
-	profesionalA.tipoProfesional("Libre")
-	profesionalA.provHab(#{"Santa Cruz", "Tierra del Fuego"})
-	universidadX.ubicacionProvincia("Corrientes")
+	var profesionalA = new ProfesionalLibre()
+	profesionalA.provinciasHabilitadas(#{"Santa Cruz", "Tierra del Fuego"})
 	assert.equals(#{"Santa Cruz", "Tierra del Fuego"},profesionalA.provinciasHabilitadas())
 
 }
@@ -47,26 +46,25 @@ test "Universidad X, profesional Libre, provincias habilitadas, Santa Cruz y Tie
 test "Universidad UBA, profesional Vinculado, honorarios de la UBA 2000" {
 	
 	var universidadUBA = new Universidad()
-	var profesionalA = new Profesional()
-	profesionalA.tipoProfesional("Vinculado")
+	var profesionalA = new ProfesionalVinculado()
+	universidadUBA.agregarProfesional(profesionalA)
 	universidadUBA.honorariosRecomendados(2000)
-	assert.equals(2000,universidadUBA.honorarios(profesionalA))
+	assert.equals(2000,profesionalA.honorarios())
 
 }
 
-test "Universidad Litoral, profesional Vinculado" {
+test "Profesional Litoral, honorarios 3000" {
 	
-	var universidadLitoral = new Universidad()
-	var profesionalA = new Profesional()
-	profesionalA.tipoProfesional("Litoral")
-	assert.equals(3000,universidadLitoral.honorarios(profesionalA))
+	var profesionalA = new ProfesionalLitoral()
+	profesionalA.honorarios(1)
+	assert.equals(3000,profesionalA.honorarios())
 
 }
 
-test "Universidad X, profesional Libre, honorarios 1000" {
+
+test "Profesional Libre, honorarios 1000" {
 	
-	var profesionalA = new Profesional()
-	profesionalA.tipoProfesional("Litoral")
+	var profesionalA = new ProfesionalLibre()
 	profesionalA.honorarios(1000)
 	assert.equals(1000,profesionalA.honorarios())
 
@@ -74,123 +72,93 @@ test "Universidad X, profesional Libre, honorarios 1000" {
 
 test "Profesional A, B y C son caros" {
 
-var profesionalA = new Profesional()
-var profesionalB = new Profesional()
-var profesionalC = new Profesional()
-var profesionalD = new Profesional()
+var profesionalA = new ProfesionalVinculado()
+var profesionalB = new ProfesionalLitoral()
+var profesionalC = new ProfesionalVinculado()
+var profesionalD = new ProfesionalLibre()
 var universidadUBA = new Universidad()
-var universidadLitoral = new Universidad()
 var universidadRosario = new Universidad()
 var empresaServicioA = new EmpresaServicio()
 
-profesionalA.tipoProfesional("Vinculado")
-universidadUBA.honorariosRecomendados(3500)
+
 universidadUBA.agregarProfesional(profesionalA)
-profesionalA.honorarios(universidadUBA,profesionalA)
+universidadUBA.honorariosRecomendados(3500)
+profesionalA.honorarios()
 
-profesionalB.tipoProfesional("Litoral")
-profesionalB.honorarios(universidadLitoral,profesionalB)
-universidadLitoral.agregarProfesional(profesionalB)
+profesionalB.honorarios(1)
 
-
-profesionalC.tipoProfesional("Vinculado")
-universidadRosario.honorariosRecomendados(2000)
-profesionalC.honorarios(universidadRosario,profesionalC)
 universidadRosario.agregarProfesional(profesionalC)
+universidadRosario.honorariosRecomendados(2000)
+profesionalC.honorarios()
 
-
-profesionalD.tipoProfesional("Libre")
 profesionalD.honorarios(1000)
 
 empresaServicioA.honorarioReferencia(1500)
 
 empresaServicioA.agregarProfesionales(#{profesionalA,profesionalB,profesionalC,profesionalD})
-empresaServicioA.agregarUniversidad(universidadUBA)
-empresaServicioA.agregarUniversidad(universidadLitoral)
-empresaServicioA.agregarUniversidad(universidadRosario)
+empresaServicioA.agregarUniversidades(#{universidadUBA,universidadRosario})
 
 assert.equals(#{profesionalA, profesionalB,profesionalC},empresaServicioA.profesionalesCaros())
 
 }
 
+
 test "UBA es una universidad Formadora"{
 	
 	var profesionalA = new Profesional()
 	var empresaServicioA = new EmpresaServicio()
-	profesionalA.tipoProfesional("Vinculado")
 	profesionalA.casaEstudios("Universidad de Buenos Aires")
 	empresaServicioA.agregarProfesional(profesionalA)
 	assert.equals(#{"Universidad de Buenos Aires"},empresaServicioA.universidadesFormadoras())
 }
 
-
 test "Profesional D es el mas barato" {
 
-var profesionalA = new Profesional()
-var profesionalB = new Profesional()
-var profesionalC = new Profesional()
-var profesionalD = new Profesional()
+var profesionalA = new ProfesionalVinculado()
+var profesionalB = new ProfesionalLitoral()
+var profesionalC = new ProfesionalVinculado()
+var profesionalD = new ProfesionalLibre()
 var universidadUBA = new Universidad()
-var universidadLitoral = new Universidad()
 var universidadRosario = new Universidad()
 var empresaServicioA = new EmpresaServicio()
 
-profesionalA.tipoProfesional("Vinculado")
-universidadUBA.honorariosRecomendados(3500)
 universidadUBA.agregarProfesional(profesionalA)
-profesionalA.honorarios(universidadUBA,profesionalA)
+universidadUBA.honorariosRecomendados(3500)
+profesionalA.honorarios()
 
-profesionalB.tipoProfesional("Litoral")
-profesionalB.honorarios(universidadLitoral,profesionalB)
-universidadLitoral.agregarProfesional(profesionalB)
+profesionalB.honorarios(1)
 
-
-profesionalC.tipoProfesional("Vinculado")
-universidadRosario.honorariosRecomendados(2000)
-profesionalC.honorarios(universidadRosario,profesionalC)
 universidadRosario.agregarProfesional(profesionalC)
+universidadRosario.honorariosRecomendados(2000)
+profesionalC.honorarios()
 
-
-profesionalD.tipoProfesional("Libre")
 profesionalD.honorarios(1000)
 
 empresaServicioA.honorarioReferencia(1500)
-
 empresaServicioA.agregarProfesionales(#{profesionalA,profesionalB,profesionalC,profesionalD})
-empresaServicioA.agregarUniversidad(universidadUBA)
-empresaServicioA.agregarUniversidad(universidadLitoral)
-empresaServicioA.agregarUniversidad(universidadRosario)
-
+empresaServicioA.agregarUniversidades(#{universidadUBA,universidadRosario})
 assert.equals(profesionalD,empresaServicioA.profesionalMasBarato())
-
 }
 
-
 test "Provincia Cubierta: Mendoza"{
-	var profesionalA = new Profesional()
+	var profesionalA = new ProfesionalLibre()
 	var empresaServicioA = new EmpresaServicio()
-	profesionalA.tipoProfesional("Libre")
-	profesionalA.provHab(#{"Mendoza"})
+	profesionalA.provinciasHabilitadas(#{"Mendoza"})
 	empresaServicioA.agregarProfesional(profesionalA)
 	assert.equals(true,empresaServicioA.provinciaCubierta(#{"Mendoza"}))
 }
 
 test "Provincia Cubierta: Del Litoral"{
-	var profesionalA = new Profesional()
-	var universidadLitoral = new Universidad()
+	var profesionalA = new ProfesionalLitoral()
 	var empresaServicioA = new EmpresaServicio()
-	profesionalA.tipoProfesional("Litoral")
-	universidadLitoral.provinciasHabilitadas(profesionalA)
 	empresaServicioA.agregarProfesional(profesionalA)
-	empresaServicioA.agregarUniversidad(universidadLitoral)
-	assert.equals(true,empresaServicioA.provinciaCubiertaA(#{"Corrientes", "Entre Rios", "Santa Fe"}))
+	assert.equals(true,empresaServicioA.provinciaCubierta(#{"Corrientes", "Entre Rios", "Santa Fe"}))
 }
 
 test "Estudio 1 en la UBA"{
 	
 	var profesionalA = new Profesional()
 	var empresaServicioA = new EmpresaServicio()
-	profesionalA.tipoProfesional("Vinculado")
 	profesionalA.casaEstudios("Universidad de Buenos Aires")
 	empresaServicioA.agregarProfesional(profesionalA)
 	assert.equals(1,empresaServicioA.cantidadProfEstudioEn("Universidad de Buenos Aires"))
@@ -198,424 +166,342 @@ test "Estudio 1 en la UBA"{
 
 test "Profesional Caro: Lito"{
 	var uniSanMartin = new Universidad()
+	var uniRosario = new Universidad()
+	var uniCorrientes = new Universidad()
+	var uniHurlingham = new Universidad()
+	var pManolo = new ProfesionalVinculado()
+	var pMelina = new ProfesionalLitoral()
+	var pLito = new ProfesionalLibre()
+	var pLuciana = new ProfesionalLibre()
+		
 	uniSanMartin.nombre("Universidad de San Martin")
 	uniSanMartin.honorariosRecomendados(3500)
 	uniSanMartin.ubicacionProvincia("Buenos Aires")
 	
-	var uniRosario = new Universidad()
 	uniRosario.nombre("Universidad de Rosario")
+	uniRosario.agregarProfesional(pManolo)
 	uniRosario.honorariosRecomendados(2800)
 	uniRosario.ubicacionProvincia("Santa Fe")
 	
-	var uniCorrientes = new Universidad()
 	uniCorrientes.nombre("Universidad de Corrientes")
 	uniCorrientes.honorariosRecomendados(4200)
 	uniCorrientes.ubicacionProvincia("Corrientes")
 	
-	var uniHurlingham = new Universidad()
 	uniHurlingham.nombre("Universidad de Hurlingham")
 	uniHurlingham.honorariosRecomendados(8800)
 	uniHurlingham.ubicacionProvincia("Buenos Aires")
 	
-	
-	var pManolo = new Profesional()
-	pManolo.tipoProfesional("Vinculado")
 	pManolo.casaEstudios("Universidad de Rosario")
-	
-	
-	var pMelina = new Profesional()
-	pMelina.tipoProfesional("Litoral")
+	pManolo.honorarios()
+
 	pMelina.casaEstudios("Universidad de Corrientes")
-	pMelina.honorarios()
+	pMelina.honorarios(1)
 	
-	var pLito = new Profesional()
-	pLito.tipoProfesional("Libre")
 	pLito.casaEstudios("Universidad de Hurlingham")
 	pLito.honorarios(5000)
-	pLito.provHab(#{"Santa Fe"})
-	pLito.provHab(#{"Cordoba"})
-	pLito.provHab(#{"Buenos Aires"})
+	pLito.provinciasHabilitadas(#{"Santa Fe"})
+	pLito.provinciasHabilitadas(#{"Cordoba"})
+	pLito.provinciasHabilitadas(#{"Buenos Aires"})
 	
-	var pLuciana = new Profesional()
-	pLuciana.tipoProfesional("Libre")
 	pLuciana.casaEstudios("Universidad de Rosario")
 	pLuciana.honorarios(3200)
-	pLito.provHab(#{"Santa Fe"})
-	pLito.provHab(#{"Entre Rios"})
-	
-	
-	uniRosario.agregarProfesional(pManolo)
-	pManolo.honorarios(uniRosario,pManolo)
-	
-	uniCorrientes.agregarProfesional(pMelina)
-	pMelina.honorarios(uniCorrientes,pMelina)
-	
+	pLuciana.provinciasHabilitadas(#{"Santa Fe"})
+	pLuciana.provinciasHabilitadas(#{"Entre Rios"})
+
 	var empresaServicio = new EmpresaServicio()
 	empresaServicio.agregarProfesionales(#{pManolo,pMelina,pLito,pLuciana})
-	empresaServicio.agregarUniversidad(uniSanMartin)
-	empresaServicio.agregarUniversidad(uniRosario)
-	empresaServicio.agregarUniversidad(uniCorrientes)
-	empresaServicio.agregarUniversidad(uniHurlingham)
+	empresaServicio.agregarUniversidades(#{uniSanMartin,uniRosario,uniCorrientes,uniHurlingham})
 	empresaServicio.honorarioReferencia(3500)
 	
 	assert.equals(#{pLito},empresaServicio.profesionalesCaros())
 }
 
+
 test "Universidades formadoras: Rosario, Corrientes, Hurlingham"{
 	var uniSanMartin = new Universidad()
+	var uniRosario = new Universidad()
+	var uniCorrientes = new Universidad()
+	var uniHurlingham = new Universidad()
+	var pManolo = new ProfesionalVinculado()
+	var pMelina = new ProfesionalLitoral()
+	var pLito = new ProfesionalLibre()
+	var pLuciana = new ProfesionalLibre()
+		
 	uniSanMartin.nombre("Universidad de San Martin")
 	uniSanMartin.honorariosRecomendados(3500)
 	uniSanMartin.ubicacionProvincia("Buenos Aires")
 	
-	var uniRosario = new Universidad()
 	uniRosario.nombre("Universidad de Rosario")
+	uniRosario.agregarProfesional(pManolo)
 	uniRosario.honorariosRecomendados(2800)
 	uniRosario.ubicacionProvincia("Santa Fe")
 	
-	var uniCorrientes = new Universidad()
 	uniCorrientes.nombre("Universidad de Corrientes")
 	uniCorrientes.honorariosRecomendados(4200)
 	uniCorrientes.ubicacionProvincia("Corrientes")
 	
-	var uniHurlingham = new Universidad()
 	uniHurlingham.nombre("Universidad de Hurlingham")
 	uniHurlingham.honorariosRecomendados(8800)
 	uniHurlingham.ubicacionProvincia("Buenos Aires")
 	
-	
-	var pManolo = new Profesional()
-	pManolo.tipoProfesional("Vinculado")
 	pManolo.casaEstudios("Universidad de Rosario")
-	
-	
-	var pMelina = new Profesional()
-	pMelina.tipoProfesional("Litoral")
+	pManolo.honorarios()
+
 	pMelina.casaEstudios("Universidad de Corrientes")
 	pMelina.honorarios()
 	
-	var pLito = new Profesional()
-	pLito.tipoProfesional("Libre")
 	pLito.casaEstudios("Universidad de Hurlingham")
 	pLito.honorarios(5000)
-	pLito.provHab(#{"Santa Fe"})
-	pLito.provHab(#{"Cordoba"})
-	pLito.provHab(#{"Buenos Aires"})
+	pLito.provinciasHabilitadas(#{"Santa Fe"})
+	pLito.provinciasHabilitadas(#{"Cordoba"})
+	pLito.provinciasHabilitadas(#{"Buenos Aires"})
 	
-	var pLuciana = new Profesional()
-	pLuciana.tipoProfesional("Libre")
 	pLuciana.casaEstudios("Universidad de Rosario")
 	pLuciana.honorarios(3200)
-	pLito.provHab(#{"Santa Fe"})
-	pLito.provHab(#{"Entre Rios"})
-	
-	
-	uniRosario.agregarProfesional(pManolo)
-	pManolo.honorarios(uniRosario,pManolo)
-	
-	uniCorrientes.agregarProfesional(pMelina)
-	pMelina.honorarios(uniCorrientes,pMelina)
-	
+	pLuciana.provinciasHabilitadas(#{"Santa Fe"})
+	pLuciana.provinciasHabilitadas(#{"Entre Rios"})
+
 	var empresaServicio = new EmpresaServicio()
 	empresaServicio.agregarProfesionales(#{pManolo,pMelina,pLito,pLuciana})
-	empresaServicio.agregarUniversidad(uniSanMartin)
-	empresaServicio.agregarUniversidad(uniRosario)
-	empresaServicio.agregarUniversidad(uniCorrientes)
-	empresaServicio.agregarUniversidad(uniHurlingham)
+	empresaServicio.agregarUniversidades(#{uniSanMartin,uniRosario,uniCorrientes,uniHurlingham})
 	empresaServicio.honorarioReferencia(3500)
+	
 	assert.equals(#{"Universidad de Rosario", "Universidad de Corrientes", "Universidad de Hurlingham"},empresaServicio.universidadesFormadoras())
 }
 
 
-
 test "Profesional mas barato: Manolo"{
 	var uniSanMartin = new Universidad()
+	var uniRosario = new Universidad()
+	var uniCorrientes = new Universidad()
+	var uniHurlingham = new Universidad()
+	var pManolo = new ProfesionalVinculado()
+	var pMelina = new ProfesionalLitoral()
+	var pLito = new ProfesionalLibre()
+	var pLuciana = new ProfesionalLibre()
+		
 	uniSanMartin.nombre("Universidad de San Martin")
 	uniSanMartin.honorariosRecomendados(3500)
 	uniSanMartin.ubicacionProvincia("Buenos Aires")
 	
-	var uniRosario = new Universidad()
 	uniRosario.nombre("Universidad de Rosario")
+	uniRosario.agregarProfesional(pManolo)
 	uniRosario.honorariosRecomendados(2800)
 	uniRosario.ubicacionProvincia("Santa Fe")
 	
-	var uniCorrientes = new Universidad()
 	uniCorrientes.nombre("Universidad de Corrientes")
 	uniCorrientes.honorariosRecomendados(4200)
 	uniCorrientes.ubicacionProvincia("Corrientes")
 	
-	var uniHurlingham = new Universidad()
 	uniHurlingham.nombre("Universidad de Hurlingham")
 	uniHurlingham.honorariosRecomendados(8800)
 	uniHurlingham.ubicacionProvincia("Buenos Aires")
 	
-	
-	var pManolo = new Profesional()
-	pManolo.tipoProfesional("Vinculado")
 	pManolo.casaEstudios("Universidad de Rosario")
-	
-	
-	var pMelina = new Profesional()
-	pMelina.tipoProfesional("Litoral")
+	pManolo.honorarios()
+
 	pMelina.casaEstudios("Universidad de Corrientes")
-	pMelina.honorarios()
+	pMelina.honorarios(1)
 	
-	var pLito = new Profesional()
-	pLito.tipoProfesional("Libre")
 	pLito.casaEstudios("Universidad de Hurlingham")
 	pLito.honorarios(5000)
-	pLito.provHab(#{"Santa Fe"})
-	pLito.provHab(#{"Cordoba"})
-	pLito.provHab(#{"Buenos Aires"})
+	pLito.provinciasHabilitadas(#{"Santa Fe"})
+	pLito.provinciasHabilitadas(#{"Cordoba"})
+	pLito.provinciasHabilitadas(#{"Buenos Aires"})
 	
-	var pLuciana = new Profesional()
-	pLuciana.tipoProfesional("Libre")
 	pLuciana.casaEstudios("Universidad de Rosario")
 	pLuciana.honorarios(3200)
-	pLito.provHab(#{"Santa Fe"})
-	pLito.provHab(#{"Entre Rios"})
-	
-	
-	uniRosario.agregarProfesional(pManolo)
-	pManolo.honorarios(uniRosario,pManolo)
-	
-	uniCorrientes.agregarProfesional(pMelina)
-	pMelina.honorarios(uniCorrientes,pMelina)
-	
+	pLuciana.provinciasHabilitadas(#{"Santa Fe"})
+	pLuciana.provinciasHabilitadas(#{"Entre Rios"})
+
 	var empresaServicio = new EmpresaServicio()
 	empresaServicio.agregarProfesionales(#{pManolo,pMelina,pLito,pLuciana})
-	empresaServicio.agregarUniversidad(uniSanMartin)
-	empresaServicio.agregarUniversidad(uniRosario)
-	empresaServicio.agregarUniversidad(uniCorrientes)
-	empresaServicio.agregarUniversidad(uniHurlingham)
+	empresaServicio.agregarUniversidades(#{uniSanMartin,uniRosario,uniCorrientes,uniHurlingham})
 	empresaServicio.honorarioReferencia(3500)
 	assert.equals(pManolo,empresaServicio.profesionalMasBarato())
 }
 
 test "2 profesionales estudiaron en Rosario"{
 	var uniSanMartin = new Universidad()
+	var uniRosario = new Universidad()
+	var uniCorrientes = new Universidad()
+	var uniHurlingham = new Universidad()
+	var pManolo = new ProfesionalVinculado()
+	var pMelina = new ProfesionalLitoral()
+	var pLito = new ProfesionalLibre()
+	var pLuciana = new ProfesionalLibre()
+		
 	uniSanMartin.nombre("Universidad de San Martin")
 	uniSanMartin.honorariosRecomendados(3500)
 	uniSanMartin.ubicacionProvincia("Buenos Aires")
 	
-	var uniRosario = new Universidad()
 	uniRosario.nombre("Universidad de Rosario")
+	uniRosario.agregarProfesional(pManolo)
 	uniRosario.honorariosRecomendados(2800)
 	uniRosario.ubicacionProvincia("Santa Fe")
 	
-	var uniCorrientes = new Universidad()
 	uniCorrientes.nombre("Universidad de Corrientes")
 	uniCorrientes.honorariosRecomendados(4200)
 	uniCorrientes.ubicacionProvincia("Corrientes")
 	
-	var uniHurlingham = new Universidad()
 	uniHurlingham.nombre("Universidad de Hurlingham")
 	uniHurlingham.honorariosRecomendados(8800)
 	uniHurlingham.ubicacionProvincia("Buenos Aires")
 	
-	
-	var pManolo = new Profesional()
-	pManolo.tipoProfesional("Vinculado")
 	pManolo.casaEstudios("Universidad de Rosario")
-	
-	
-	var pMelina = new Profesional()
-	pMelina.tipoProfesional("Litoral")
+	pManolo.honorarios()
+
 	pMelina.casaEstudios("Universidad de Corrientes")
 	pMelina.honorarios()
 	
-	var pLito = new Profesional()
-	pLito.tipoProfesional("Libre")
 	pLito.casaEstudios("Universidad de Hurlingham")
 	pLito.honorarios(5000)
-	pLito.provHab(#{"Santa Fe"})
-	pLito.provHab(#{"Cordoba"})
-	pLito.provHab(#{"Buenos Aires"})
+	pLito.provinciasHabilitadas(#{"Santa Fe"})
+	pLito.provinciasHabilitadas(#{"Cordoba"})
+	pLito.provinciasHabilitadas(#{"Buenos Aires"})
 	
-	var pLuciana = new Profesional()
-	pLuciana.tipoProfesional("Libre")
 	pLuciana.casaEstudios("Universidad de Rosario")
 	pLuciana.honorarios(3200)
-	pLito.provHab(#{"Santa Fe"})
-	pLito.provHab(#{"Entre Rios"})
-	
-	
-	uniRosario.agregarProfesional(pManolo)
-	pManolo.honorarios(uniRosario,pManolo)
-	
-	uniCorrientes.agregarProfesional(pMelina)
-	pMelina.honorarios(uniCorrientes,pMelina)
-	
+	pLuciana.provinciasHabilitadas(#{"Santa Fe"})
+	pLuciana.provinciasHabilitadas(#{"Entre Rios"})
+
 	var empresaServicio = new EmpresaServicio()
 	empresaServicio.agregarProfesionales(#{pManolo,pMelina,pLito,pLuciana})
-	empresaServicio.agregarUniversidad(uniSanMartin)
-	empresaServicio.agregarUniversidad(uniRosario)
-	empresaServicio.agregarUniversidad(uniCorrientes)
-	empresaServicio.agregarUniversidad(uniHurlingham)
+	empresaServicio.agregarUniversidades(#{uniSanMartin,uniRosario,uniCorrientes,uniHurlingham})
 	empresaServicio.honorarioReferencia(3500)
 	assert.equals(2,empresaServicio.cantidadProfEstudioEn("Universidad de Rosario"))
 }
 
 test "1 profesional estudio en Hurlingham"{
 	var uniSanMartin = new Universidad()
+	var uniRosario = new Universidad()
+	var uniCorrientes = new Universidad()
+	var uniHurlingham = new Universidad()
+	var pManolo = new ProfesionalVinculado()
+	var pMelina = new ProfesionalLitoral()
+	var pLito = new ProfesionalLibre()
+	var pLuciana = new ProfesionalLibre()
+		
 	uniSanMartin.nombre("Universidad de San Martin")
 	uniSanMartin.honorariosRecomendados(3500)
 	uniSanMartin.ubicacionProvincia("Buenos Aires")
 	
-	var uniRosario = new Universidad()
 	uniRosario.nombre("Universidad de Rosario")
+	uniRosario.agregarProfesional(pManolo)
 	uniRosario.honorariosRecomendados(2800)
 	uniRosario.ubicacionProvincia("Santa Fe")
 	
-	var uniCorrientes = new Universidad()
 	uniCorrientes.nombre("Universidad de Corrientes")
 	uniCorrientes.honorariosRecomendados(4200)
 	uniCorrientes.ubicacionProvincia("Corrientes")
 	
-	var uniHurlingham = new Universidad()
 	uniHurlingham.nombre("Universidad de Hurlingham")
 	uniHurlingham.honorariosRecomendados(8800)
 	uniHurlingham.ubicacionProvincia("Buenos Aires")
 	
-	
-	var pManolo = new Profesional()
-	pManolo.tipoProfesional("Vinculado")
 	pManolo.casaEstudios("Universidad de Rosario")
-	
-	
-	var pMelina = new Profesional()
-	pMelina.tipoProfesional("Litoral")
+	pManolo.honorarios()
+
 	pMelina.casaEstudios("Universidad de Corrientes")
 	pMelina.honorarios()
 	
-	var pLito = new Profesional()
-	pLito.tipoProfesional("Libre")
 	pLito.casaEstudios("Universidad de Hurlingham")
 	pLito.honorarios(5000)
-	pLito.provHab(#{"Santa Fe"})
-	pLito.provHab(#{"Cordoba"})
-	pLito.provHab(#{"Buenos Aires"})
+	pLito.provinciasHabilitadas(#{"Santa Fe"})
+	pLito.provinciasHabilitadas(#{"Cordoba"})
+	pLito.provinciasHabilitadas(#{"Buenos Aires"})
 	
-	var pLuciana = new Profesional()
-	pLuciana.tipoProfesional("Libre")
 	pLuciana.casaEstudios("Universidad de Rosario")
 	pLuciana.honorarios(3200)
-	pLito.provHab(#{"Santa Fe"})
-	pLito.provHab(#{"Entre Rios"})
-	
-	
-	uniRosario.agregarProfesional(pManolo)
-	pManolo.honorarios(uniRosario,pManolo)
-	
-	uniCorrientes.agregarProfesional(pMelina)
-	pMelina.honorarios(uniCorrientes,pMelina)
-	
+	pLuciana.provinciasHabilitadas(#{"Santa Fe"})
+	pLuciana.provinciasHabilitadas(#{"Entre Rios"})
+
 	var empresaServicio = new EmpresaServicio()
 	empresaServicio.agregarProfesionales(#{pManolo,pMelina,pLito,pLuciana})
-	empresaServicio.agregarUniversidad(uniSanMartin)
-	empresaServicio.agregarUniversidad(uniRosario)
-	empresaServicio.agregarUniversidad(uniCorrientes)
-	empresaServicio.agregarUniversidad(uniHurlingham)
+	empresaServicio.agregarUniversidades(#{uniSanMartin,uniRosario,uniCorrientes,uniHurlingham})
 	empresaServicio.honorarioReferencia(3500)
 	assert.equals(1,empresaServicio.cantidadProfEstudioEn("Universidad de Hurlingham"))
 }
 
 test "Ningun profesional estudio en San Martin"{
 	var uniSanMartin = new Universidad()
+	var uniRosario = new Universidad()
+	var uniCorrientes = new Universidad()
+	var uniHurlingham = new Universidad()
+	var pManolo = new ProfesionalVinculado()
+	var pMelina = new ProfesionalLitoral()
+	var pLito = new ProfesionalLibre()
+	var pLuciana = new ProfesionalLibre()
+		
 	uniSanMartin.nombre("Universidad de San Martin")
 	uniSanMartin.honorariosRecomendados(3500)
 	uniSanMartin.ubicacionProvincia("Buenos Aires")
 	
-	var uniRosario = new Universidad()
 	uniRosario.nombre("Universidad de Rosario")
+	uniRosario.agregarProfesional(pManolo)
 	uniRosario.honorariosRecomendados(2800)
 	uniRosario.ubicacionProvincia("Santa Fe")
 	
-	var uniCorrientes = new Universidad()
 	uniCorrientes.nombre("Universidad de Corrientes")
 	uniCorrientes.honorariosRecomendados(4200)
 	uniCorrientes.ubicacionProvincia("Corrientes")
 	
-	var uniHurlingham = new Universidad()
 	uniHurlingham.nombre("Universidad de Hurlingham")
 	uniHurlingham.honorariosRecomendados(8800)
 	uniHurlingham.ubicacionProvincia("Buenos Aires")
 	
-	
-	var pManolo = new Profesional()
-	pManolo.tipoProfesional("Vinculado")
 	pManolo.casaEstudios("Universidad de Rosario")
-	
-	
-	var pMelina = new Profesional()
-	pMelina.tipoProfesional("Litoral")
+	pManolo.honorarios()
+
 	pMelina.casaEstudios("Universidad de Corrientes")
 	pMelina.honorarios()
 	
-	var pLito = new Profesional()
-	pLito.tipoProfesional("Libre")
 	pLito.casaEstudios("Universidad de Hurlingham")
 	pLito.honorarios(5000)
-	pLito.provHab(#{"Santa Fe"})
-	pLito.provHab(#{"Cordoba"})
-	pLito.provHab(#{"Buenos Aires"})
+	pLito.provinciasHabilitadas(#{"Santa Fe"})
+	pLito.provinciasHabilitadas(#{"Cordoba"})
+	pLito.provinciasHabilitadas(#{"Buenos Aires"})
 	
-	var pLuciana = new Profesional()
-	pLuciana.tipoProfesional("Libre")
 	pLuciana.casaEstudios("Universidad de Rosario")
 	pLuciana.honorarios(3200)
-	pLito.provHab(#{"Santa Fe"})
-	pLito.provHab(#{"Entre Rios"})
-	
-	
-	uniRosario.agregarProfesional(pManolo)
-	pManolo.honorarios(uniRosario,pManolo)
-	
-	uniCorrientes.agregarProfesional(pMelina)
-	pMelina.honorarios(uniCorrientes,pMelina)
-	
+	pLuciana.provinciasHabilitadas(#{"Santa Fe"})
+	pLuciana.provinciasHabilitadas(#{"Entre Rios"})
+
 	var empresaServicio = new EmpresaServicio()
 	empresaServicio.agregarProfesionales(#{pManolo,pMelina,pLito,pLuciana})
-	empresaServicio.agregarUniversidad(uniSanMartin)
-	empresaServicio.agregarUniversidad(uniRosario)
-	empresaServicio.agregarUniversidad(uniCorrientes)
-	empresaServicio.agregarUniversidad(uniHurlingham)
+	empresaServicio.agregarUniversidades(#{uniSanMartin,uniRosario,uniCorrientes,uniHurlingham})
 	empresaServicio.honorarioReferencia(3500)
 	assert.equals(0,empresaServicio.cantidadProfEstudioEn("Universidad de San Martin"))
 }
 
 test "donacion vinculado: le quedan $0 y a la universidad la mitad de sus honorarios"{
 	var universidadUBA = new Universidad()
-	var profesionalA = new Profesional()
-	profesionalA.tipoProfesional("Vinculado")
+	var profesionalA = new ProfesionalVinculado()
+	universidadUBA.agregarProfesional(profesionalA)
 	universidadUBA.honorariosRecomendados(2000)
-	profesionalA.honorarios(universidadUBA,profesionalA)
-	profesionalA.donarUniversidad(universidadUBA)
+	profesionalA.honorarios()
+	profesionalA.donar(universidadUBA)
 	assert.equals(1000,universidadUBA.donacionesRecibidas())
 	assert.equals(0,profesionalA.honorarios())
 
 }
 
 test "donacion litoral"{
-	var universidadLitoral = new Universidad()
-	var profesionalA = new Profesional()
-	profesionalA.tipoProfesional("Litoral")
-	universidadLitoral.honorarios(profesionalA)
-	profesionalA.honorarios(universidadLitoral,profesionalA)
-	profesionalA.donarAsociacion(asociacionProfesionales)
+	var profesionalA = new ProfesionalLitoral()
+	profesionalA.honorarios(1)
+	profesionalA.donar(asociacionProfesionales)
 	assert.equals(3000,asociacionProfesionales.donacionesRecibidas())
 	assert.equals(0,profesionalA.honorarios())
 }
 
 test "profesional libre le pasa a otro profesional libre"{
-	var profesionalA = new Profesional()
-	profesionalA.tipoProfesional("Libre")
+	var profesionalA = new ProfesionalLibre()
 	profesionalA.honorarios(5000)
 	
-	var profesionalB = new Profesional()
-	profesionalB.tipoProfesional("Libre")
+	var profesionalB = new ProfesionalLibre()
 	profesionalB.honorarios(0)
 	
-	profesionalA.donarLibre(profesionalB,3000)
+	profesionalA.donar(profesionalB,3000)
 	
 	assert.equals(2000,profesionalA.totalRecaudado())
 	assert.equals(3000,profesionalB.totalRecaudado())

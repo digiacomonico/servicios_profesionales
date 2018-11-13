@@ -1,14 +1,12 @@
-import Profesional.*
+import ProfesionalVinculado.*
 import asociacionProfesionales.*
 
 class Universidad {
 	var property nombre
-	var property honorariosRecomendados
+	var honorariosRecomendados
 	var property ubicacionProvincia
-	//var provinciasHabilitadas = #{}
+	var provinciasHabilitadas = #{}
 	var profesionales = []
-	var provinciasHabilitadasProfesional = #{}
-	var property honorarios
 	
 	var donacionesRecibidas = 0
 	
@@ -28,42 +26,22 @@ class Universidad {
 		profesionales.remove(profesional)
 	}
 	
-	method provinciasHabilitadas(profesional){
-		
-		if (profesional.tipoProfesional() == "Vinculado"){
-			provinciasHabilitadasProfesional.add(self.ubicacionProvincia())
-			return provinciasHabilitadasProfesional
-		}
-		
-		else if (profesional.tipoProfesional() == "Litoral"){
-			provinciasHabilitadasProfesional.add("Entre Rios")
-			provinciasHabilitadasProfesional.add("Santa Fe")
-			provinciasHabilitadasProfesional.add("Corrientes")
-			profesional.provHab(#{"Entre Rios","Santa Fe","Corrientes"})
-			return provinciasHabilitadasProfesional
-		}
-		
-		else return provinciasHabilitadasProfesional
-	}
-
-	method honorarios(profesional){
-		if (profesional.tipoProfesional() == "Vinculado"){
-			honorarios = self.honorariosRecomendados()
-			return honorarios
-		}
-		else if (profesional.tipoProfesional() == "Litoral"){
-			honorarios = 3000
-			return honorarios
-		}
-		else return profesional.honorarios()
-	}
-
+	
 	method provinciasHabilitadas(){
-		return provinciasHabilitadasProfesional
+		var profVinculados = profesionales.filter({profesional => profesional.tipoProfesional () == "Vinculado"})
+		profVinculados.forEach({profVinculados => profVinculados.provinciasHabilitadas(self.ubicacionProvincia())})
+		return provinciasHabilitadas
+		}
+
+	method honorariosRecomendados(valor){
+		honorariosRecomendados = valor
+		var profVinculados = profesionales.filter({profesional => profesional.tipoProfesional () == "Vinculado"})
+		profVinculados.forEach({profVinculados => profVinculados.honorarios(self.honorariosRecomendados())})
 	}
-
-
-
+	
+	method honorariosRecomendados(){
+		return honorariosRecomendados
+	}
 }
 
 	

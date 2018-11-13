@@ -1,5 +1,7 @@
 import Universidad.*
-import Profesional.*
+import ProfesionalVinculado.*
+import ProfesionalLitoral.*
+import ProfesionalLibre.*
 
 class EmpresaServicio{
 	
@@ -19,16 +21,24 @@ class EmpresaServicio{
 		profesionales.add(profesional)
 	}
 	
-	method agregarUniversidad(universidad){
-		universidades.add(universidad)
+	method agregarProfesionales(losProfesionales){
+		profesionales.addAll(losProfesionales)
 	}
 	
 	method quitarProfesional(profesional){
 		profesionales.remove(profesional)
 	}
 	
-	method agregarProfesionales(losProfesionales){
-		profesionales.addAll(losProfesionales)
+	method agregarUniversidad(universidad){
+		universidades.add(universidad)
+	}
+	
+	method agregarUniversidades(lasUniversidades){
+		universidades.addAll(lasUniversidades)
+	}
+	
+	method quitarUniversidad(universidad){
+		universidades.remove(universidad)
 	}
 	
 	method profesionalesCaros(){
@@ -48,19 +58,8 @@ class EmpresaServicio{
 		return provHab.contains(provincia)
 	}
 	
-	method provinciaCubiertaA(provincia){
-		if (profesionales.map({profesional => profesional.provinciasHabilitadas()}).size() == 0){
-			var provHab =  universidades.map({universidad => universidad.provinciasHabilitadas()})
-			return provHab.contains(provincia)
-		}
-		else{
-			return profesionales.map({profesional => profesional.provinciasHabilitadas()}).contains(provincia)
-		}
-	}
-	
 	method cantidadProfEstudioEn(universidad){
 		return profesionales.filter({profesional => profesional.casaEstudios() == universidad}).size()
 	}
 	
-	
-	}
+}
